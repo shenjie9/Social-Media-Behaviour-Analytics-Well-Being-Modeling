@@ -1,0 +1,432 @@
+---
+title: "Social Media Behaviour Analytics & Well-Being"
+authors: "Jie Shen, Mantram Sharma"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r data-setup, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(stats)
+
+data <- read.csv("Presentation of Data.csv")
+
+international_data <- subset(data, data$Student.Status == "I")
+domestic_data <- subset(data, data$Student.Status == "D")
+```
+
+## Section 1: Introduction
+
+**Abstract:**
+
+Social media has become a major part of student life, influencing how students communicate, access information, relax, and participate in campus communities. At the same time, excessive social media use has raised concerns about its potential relationship with mental health, sleep quality, and student engagement.
+
+This study investigates the relationship between social media usage and student well-being among university students. A structured Google Forms questionnaire was distributed through the Piazza platform and in-person interactions, collecting responses related to social media usage, perceived mental health impact, sleep patterns, campus engagement, and exposure to positive social media content. The final dataset contained 75 student responses, including 40 international students and 35 domestic students.
+
+The analysis applied descriptive statistics, simple linear regression, multiple linear regression, comparison-of-means tests, and ANOVA. Results suggest that higher social media usage is associated with greater perceived impacts on sleep patterns and mental health. However, no statistically significant relationship was observed between social media usage and campus engagement. Exposure to positive social media content also did not show a statistically significant relationship with perceived mental health impact in the ANOVA results. Overall, the findings suggest that social media usage may be an important factor associated with perceived student well-being, while also highlighting the need for further research using broader samples and additional explanatory variables.
+
+**Introduction:**
+
+Social media platforms such as Instagram, Snapchat, X, TikTok, and similar applications are now deeply embedded in daily life. For university students, social media can serve as a source of entertainment, communication, academic coordination, and social connection. However, frequent or excessive use may also be associated with negative outcomes, including disrupted sleep, stress, reduced focus, and exposure to harmful or emotionally distressing content.
+
+Previous research has suggested that social media usage may be linked to mental health concerns, including anxiety, depression, cognitive strain, and sleep-related problems. These concerns are particularly relevant for university students, who often manage academic demands, social pressures, and transitional life experiences. Understanding how social media usage relates to student well-being can therefore provide useful insight for students, educators, and campus support systems.
+
+This study examines how social media usage is associated with several indicators of student well-being, including perceived mental health impact, sleep disruption, and campus engagement. The study also considers whether exposure to positive social media content appears to influence perceived mental health outcomes.
+
+The analysis is guided by the following research questions:
+
+1.  **What are the effects of social media on students' sleep pattern and overall mental and physical health?**
+
+    -   Null Hypothesis: Social media has no influence on students' sleep pattern and overall mental/physical health
+    -   Alternative Hypothesis: Social media has influence on students' sleep pattern and overall mental/physical health
+
+2.  **How does social media influence university students' participation in campus activities and (mental health) events?**
+
+    -   Null Hypothesis: Social Media does not influence the participation of students in campus activities and (mental health) events
+    -   Alternative Hypothesis: Social Media does show influence on university students' participation in campus activities and (mental health) events
+
+3.  **How does exposure to positive social media content influence students' perceived mental health impact?**
+
+    -   Null Hypothesis: Exposure to positive social media content does not influence students' perceived mental health impact.
+    -   Alternative Hypothesis: Exposure to positive social media content influences students' perceived mental health impact.
+
+We have structured this document with different sections focusing on different aspects of the research article, where Section 2 discusses the methods of data collection, followed by Section 3 with the major portion of our sample quantitative analysis. The Discussions/Results will be briefed in the fourth section. Sections 5 and 6 cover the Limitations of our Study and the Conclusion, respectively. The Appendix consisting of the R-codes will be presented in the Section 7.
+
+## Section 2: Methods of Data Collection
+
+**Methods of Data Collection:**
+
+From late September 2024 through October 2024, a questionnaire consisting of 12 questions was distributed to university students through the Piazza platform and in-person interactions. The survey collected quantitative and qualitative information regarding social media usage, perceived impacts on sleep quality, perceived mental health effects, and participation in campus activities. The study used stratified sampling by dividing respondents into domestic and international student groups. A target sample of 40 students from each stratum was selected to support comparison across the two groups. In total, all 40 international students and 35 domestic students responded, producing a final sample size of n = 75.
+
+### Data Dictionary
+
+The following variables were collected through the survey questionnaire and subsequently used throughout the statistical analyses presented in this report.
+
+| Variable | Description | Scale / Coding |
+|-----------|-------------|----------------|
+| Student.Status | Student residency status used for stratification | D = Domestic Student, I = International Student |
+| Social.Media.Usage | Self-reported daily social media usage level | 1 = Very Low Usage, 5 = Very High Usage |
+| Impact.on.Sleep.Pattern | Perceived impact of social media on sleep quality and sleep schedule | 1 = No Impact, 5 = Strong Impact |
+| Impact.on.Mental.Health | Perceived impact of social media on mental well-being | 1 = No Impact, 5 = Strong Impact |
+| Average.Sleep.Hours | Average number of hours slept per night | Numeric (Hours) |
+| Campus.Engagement.Influence | Degree to which social media influences participation in campus activities and events | 1 = No Influence, 5 = Strong Influence |
+| Positive.Content.Encounter.Frequency | Frequency of encountering positive or uplifting content on social media platforms | 1 = Very Rarely, 5 = Very Frequently |
+
+#### Notes on Variable Coding
+
+All perception-based variables were measured using a five-point Likert scale, where larger values indicate a greater perceived influence or frequency. Student status was used as the stratification variable throughout the analysis, allowing comparisons between domestic and international student populations.
+
+The variables selected for analysis were chosen to evaluate the relationship between social media usage and several indicators of student well-being, including sleep quality, mental health, and campus engagement.
+
+## Section 3: Data Analysis
+
+**Data Analysis:**
+
+A key component of the study design was determining an appropriate sample size for estimating population-level patterns. Assuming a population size of N = 200, the required sample size $n$ was estimated using the following formula:
+
+$n = \frac{Npq}{(N - 1)D + pq}$
+
+where:
+
+-   $N = 200$ (population size),
+-   $p = 0.5$ (estimated proportion, assuming maximum variability),
+-   $q = 1 - p = 0.5$,
+-   $b = 0.085$ (bound or margin of error, 8.5%),
+-   $D = \frac{b^2}{4}$.
+
+### Sample Size Calculations:
+
+1.  Calculate $D$:
+
+    $D = \frac{b^2}{4} = \frac{(0.085)^2}{4} = 0.00180625$
+
+2.  Substitute values into the sample size formula:
+
+    $n = \frac{200 \times 0.5 \times 0.5}{(200 - 1) \times 0.00180625 + 0.5 \times 0.5}$
+
+3.  Calculated sample size:
+
+    $n \approx 81$
+
+Thus, the sample size needed is approximately **81**.
+
+After collecting survey responses, we calculated descriptive statistics for both strata. The following tables summarize social media usage, perceived impacts on sleep patterns, perceived impacts on mental health, and average sleep hours for international and domestic students.
+
+International:
+
+| Statistic | Social Media Usage | Impact on Sleep Pattern | Impact on Mental Health | Average Sleep Hours |
+|---------------|---------------|---------------|---------------|---------------|
+| Count | 40 | 40 | 40 | 40 |
+| Mean | 2.92 | 3.45 | 3.28 | 6.8 |
+| Standard Deviation | 1.10 | 1.05 | 1.09 | 1.2 |
+| Min | 1.0 | 1.0 | 1.0 | 5.0 |
+| 25% Quartile | 2.0 | 2.5 | 2.25 | 6.0 |
+| Median | 3.0 | 3.5 | 3.0 | 7.0 |
+| 75% Quartile | 3.9 | 4.0 | 4.25 | 8.0 |
+| Max | 5.0 | 5.0 | 5.0 | 9.0 |
+
+Domestic:
+
+| Statistic | Social Media Usage | Impact on Sleep Pattern | Impact on Mental Health | Average Sleep Hours |
+|---------------|---------------|---------------|---------------|---------------|
+| Count | 35 | 35 | 35 | 35 |
+| Mean | 2.74 | 2.91 | 2.76 | 7.1 |
+| Standard Deviation | 1.21 | 1.10 | 1.12 | 1.3 |
+| Min | 1.0 | 1.0 | 1.0 | 5.0 |
+| 25% Quartile | 1.5 | 2.0 | 1.5 | 6.0 |
+| Median | 2.6 | 3.0 | 3.0 | 7.0 |
+| 75% Quartile | 3.8 | 4.0 | 4.0 | 8.0 |
+| Max | 5.0 | 5.0 | 5.0 | 9.0 |
+
+This summary data from both strata provides information on the mean, median, min/max and quartiles for social media usage, impact on sleep pattern and mental health, and average sleep hour data. These summaries are critical to ensure that we can meet the conditions of the statistical tests that will be conducted in the forthcoming analysis. Understanding the variability and distribution of the data could support our comparison of mean and ANOVA test results which will be the basis of our investigation.
+
+**Simple Linear Regressions (Strata-wise): [Social Media Usage VS Impact on Sleep Pattern] & [Social Media Usage VS Impact on Mental Health]**
+
+Figures 1–4 present the simple linear regression relationships between social media usage and two student well-being indicators: perceived mental health impact and perceived sleep disruption. Separate analyses are shown for international and domestic student populations to facilitate comparison between the two strata.
+
+```{r regression-plots, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=5}
+
+p1 <- ggplot(international_data,
+             aes(x = Social.Media.Usage,
+                 y = Impact.on.Mental.Health)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "International Students: Social Media Usage vs Impact on Mental Health",
+    x = "Social Media Usage",
+    y = "Impact on Mental Health"
+  ) +
+  theme_minimal()
+
+p2 <- ggplot(domestic_data,
+             aes(x = Social.Media.Usage,
+                 y = Impact.on.Mental.Health)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Domestic Students: Social Media Usage vs Impact on Mental Health",
+    x = "Social Media Usage",
+    y = "Impact on Mental Health"
+  ) +
+  theme_minimal()
+
+p3 <- ggplot(international_data,
+             aes(x = Social.Media.Usage,
+                 y = Impact.on.Sleep.Pattern)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "International Students: Social Media Usage vs Impact on Sleep Pattern",
+    x = "Social Media Usage",
+    y = "Impact on Sleep Pattern"
+  ) +
+  theme_minimal()
+
+p4 <- ggplot(domestic_data,
+             aes(x = Social.Media.Usage,
+                 y = Impact.on.Sleep.Pattern)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Domestic Students: Social Media Usage vs Impact on Sleep Pattern",
+    x = "Social Media Usage",
+    y = "Impact on Sleep Pattern"
+  ) +
+  theme_minimal()
+
+print(p1)
+print(p2)
+print(p3)
+print(p4)
+```
+**Figure 1. International Students: Social Media Usage vs Impact on Mental Health.**
+Scatterplot with fitted least-squares regression line illustrating the positive relationship between self-reported social media usage and perceived mental health impact among international students.
+
+**Figure 2. Domestic Students: Social Media Usage vs Impact on Mental Health.**
+Scatterplot with fitted least-squares regression line illustrating the positive relationship between self-reported social media usage and perceived mental health impact among domestic students.
+
+**Figure 3. International Students: Social Media Usage vs Impact on Sleep Pattern.**
+Scatterplot with fitted least-squares regression line illustrating the association between social media usage and perceived sleep disruption among international students.
+
+**Figure 4. Domestic Students: Social Media Usage vs Impact on Sleep Pattern.**
+Scatterplot with fitted least-squares regression line illustrating the association between social media usage and perceived sleep disruption among domestic students.
+
+| Group | Response Variable | R-squared | Coefficient (Social Media Usage) | P-value |
+|--------------|--------------|--------------|------------------|--------------|
+| International Students | Impact on Sleep Pattern | 0.825 | 0.8226 | \< 0.001 |
+| Domestic Students | Impact on Sleep Pattern | 0.786 | 0.6836 | \< 0.001 |
+| International Students | Impact on Mental Health | 0.858 | 0.7968 | \< 0.001 |
+| Domestic Students | Impact on Mental Health | 0.906 | 0.8435 | \< 0.001 |
+
+The estimated coefficients indicate a moderate to strong positive relationship between social media usage and both perceived sleep disruption and mental health impact. Combined with the high R-squared values and statistically significant p-values, the results provide strong evidence that increased social media usage is associated with greater perceived negative impacts on student well-being. The international student strata exhibits a stronger relationship between social media usage and sleep disruption, whereas the domestic student strata exhibits a stronger relationship between social media usage and perceived mental health impact. It is critical to notice that the international students strata shows greater influence of social media on sleep patterns, with a coefficient of 0.8226, whereas the domestic students strata show greater influence of social media on student mental health (coefficient of 0.8435).
+
+In terms of the p-values, which are much below the $\alpha$ = 0.05 significance level, we can confirm that the influence of social media on sleep patterns and mental health is non-zero, and there is a positive relation between social media, where increased social media usage results in greater (negative) impact on both sleep patterns and mental health, thus, impacting the student well-being parameters (sleep and mental health). Hence, in terms of just the simple linear regression we can come to a conclusion on our first research question, and reject the null hypothesis, as provided above.
+
+**Comparison of Means-Test (Strata-wise):**
+
+Ensuring the conditions for comparison of means test is met:
+
+1.  **Independence**: We know the data has been collected randomly from the sample size of the statistics course, and each student response for each variable of concern is independent of the other. There is no overlap between students using more than 4 hours of social media compared to those spending less.
+
+2.  **Normality**: Our sample sizes exceed 30 observations per strata. By the Central Limit Theorem, the sampling distribution of the sample mean can be approximated as normal, making the t-test procedures reasonably robust to moderate departures from normality.
+
+3.  **Equal Variances**: We ran Levene's Test for Variance, and with a p-value of 0.344 and test statistic of 0.906, both are much above the significance level of 0.05. This allows us to fail to reject the null hypothesis, indicating no significant difference between the variances for the two groups.
+
+Summary of the Comparison of Means - Test:
+
+| Test | Variable | Group 1 (High Usage) Variance | Group 2 (Low Usage) Variance | Test Statistic | p-value | Interpretation |
+|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
+| Equal Variance Test (Levene's Test) | Campus Engagement Influence | 1.015 | 0.834 | 0.906 | 0.344 | Variances are not significantly different (p \> 0.05) |
+| Comparison of Means Test (T-test) | Campus Engagement Influence | N/A | N/A | 1.023 | 0.310 | No significant difference in means (p \> 0.05) |
+
+| Test | Variable | Group 1 (High Usage) Variance | Group 2 (Low Usage) Variance | Test Statistic | p-value | Interpretation |
+|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
+| Equal Variance Test (Levene's Test) | Average Sleep Hours | 0.441 | 0.564 | 0.248 | 0.620 | Variances are not significantly different (p \> 0.05) |
+| Comparison of Means Test (T-test) | Average Sleep Hours | N/A | N/A | -1.88 | 0.070 | No significant difference in means (p \> 0.05) |
+
+The comparison-of-means tests did not provide statistically significant evidence that students with higher social media usage differed from students with lower usage in terms of campus engagement or average sleep hours. Although the sleep-hours test produced a p-value closer to the conventional significance threshold, it remained above α = 0.05. Therefore, within this sample, social media usage group membership did not appear to produce statistically significant differences in either campus engagement or average sleep duration. These findings suggest that while social media usage is associated with perceived impacts on sleep and mental health, it does not necessarily correspond to measurable differences in participation in campus activities or average hours of sleep.
+
+**Multiple Linear Regression (Strata-wise):**
+
+The form of the multiple linear regression is 'impact on mental health = intercept + $b_1 *$ social media + $b_2 *$average hours of sleep + $b_3 *$ social media $*$ positive content'. The summary table from this analysis on both the stratas (international and domestic) yields:
+
+International:
+
+| Term | Coefficient | P-Value | Standard Error | Confidence Interval Lower | Confidence Interval Upper |
+|-------------|------------|------------|------------|------------|------------|
+| Intercept | 2.023 | 0.019 | 0.560 | -0.808 | 1.447 |
+| Social Media Usage | 0.479 | 1.044e-09 | 0.272 | -0.064 | 1.021 |
+| Average Sleep Hours | -0.188 | 0.067 | 0.140 | -0.096 | 0.473 |
+| Social Media Usage \* Positive Content | -0.0578 | 0.0461 | 0.086 | -0.197 | 0.148 |
+
+Domestic Students:
+
+| Term | Coefficient | P-Value | Standard Error | Confidence Interval Lower | Confidence Interval Upper |
+|-------------|------------|------------|------------|------------|------------|
+| Intercept | -0.051 | 0.936 | 0.627 | -1.332 | 1.231 |
+| Social Media Usage | 0.821 | 8.24e-09 | 0.103 | 0.611 | 1.031 |
+| Average Sleep Hours | 0.073 | 0.417 | 0.088 | -0.108 | 0.253 |
+| Social Media Usage \* Positive Content | 0.007 | 0.813 | 0.030 | -0.055 | 0.069 |
+
+In both stratas, social media usage acts as the primary factor that influences impact on mental health, however, with closer analysis on the international students strata, we realize that the addition of other variables and an interaction term shows significant impact on mental health. The interaction term between social media usage and positive content frequency yields a p-value that is just below the 0.05 significance level. Hence, the frequency of positive content on social media when combined with social media usage in general and the additional average sleep hours term accounts for a decreasing influence on mental health. The negative interaction coefficient suggests that the relationship between social media usage and perceived mental health impact may be moderated by the frequency of positive content encountered among international students.
+
+From a general perspective of analysis, altogether positive content or average sleep time is not a significant factor that could cause fluctuations within the impact on mental health. We get a very specific case where positive content could influence our well-being parameter, however all other tests show that this explanatory variable shows no constant trend with student well-being. This is a matter of further analysis for the third research question we are addressing.
+
+**ANOVA Test (Strata-wise):** We ran the ANOVA test for the impacts of campus engagement and positive content on student mental health. The findings from running these tests seperated by the stratas is presented below:
+
+International Students - Campus Engagement Influence
+
+|                    | Sum of Squares |  df |      F | p-value |
+|:-------------------|---------------:|----:|-------:|--------:|
+| Social Media Usage |        1.52985 |   1 | 1.8574 |  0.1806 |
+| Residual           |        32.9463 |  38 |        |         |
+
+Domestic Students - Campus Engagement Influence
+
+|                    | Sum of Squares |  df |      F | p-value |
+|:-------------------|---------------:|----:|-------:|--------:|
+| Social Media Usage |         0.0116 |   1 | 0.0121 |  0.9130 |
+| Residual           |        29.6248 |  33 |        |         |
+
+International Students - Positive Content impact on Mental Health
+
+|                                      | Sum of Squares |  df |        F | p-value |
+|:--------------------------|----------:|----------:|----------:|----------:|
+| Positive Content Encounter Frequency |       7.66e-30 |   1 | 5.89e-30 |       1 |
+| Residual                             |             52 |  38 |          |         |
+
+Domestic Students - Positive Content impact on Mental Health
+
+|                                      | Sum of Squares |  df |      F | p-value |
+|:-------------------------------------|---------------:|----:|-------:|--------:|
+| Positive Content Encounter Frequency |         0.4205 |   1 | 0.2600 |  0.6137 |
+| Residual                             |         50.125 |  33 |        |         |
+
+Examining both the impacts of campus engagement and the frequency of positive content on perceived mental health, the ANOVA test results indicate no significant effect in either international or domestic students. For international students, a p-value of 1.0 shows no relation between the frequency of positive content encounters and changes in mental health. The same stands for domestic students, but with a lower p-value of 0.6137. This is still too large to reject the null hypothesis established in the beginning of this investigation. With respect to any influence that campus engagement could have, the results for international students still show some influence on mental health if they are well engaged in on-campus activities, otherwise domestic students indicate that their campus involvement has no correlation to their perception of their mental health. This can only be substantiated by the p-values which are the thresholds to rejecting or failing to reject the null hypothesis. In this case, both these ANOVA tests in both stratas imply that we fail to reject our null hypotheses in both research question 2 and research question 3.
+
+## Section 4: Discussion of Results
+
+**Discussion of Results:**
+
+The simple linear regression analysis revealed a positive relationship between social media usage and both perceived sleep disruption and perceived mental health impact for international and domestic students. The estimated coefficients indicate that higher levels of social media usage are associated with greater reported impacts on sleep patterns and mental health. Furthermore, the statistically significant p-values (all below the significance level of α = 0.05) provide strong evidence against the null hypothesis, suggesting that social media usage is a meaningful predictor of these well-being outcomes. Consequently, we reject the null hypothesis associated with the first research question. In contrast, additional analyses examining the relationship between social media usage and campus engagement did not produce statistically significant results. This suggests that, within the scope of this study, social media usage does not appear to be a strong determinant of students' participation in campus activities or events.
+
+The comparison-of-means tests did not provide statistically significant evidence that students with higher social media usage differed from students with lower usage in terms of campus engagement or average sleep hours across either stratum. Although the sleep-hours comparison produced a p-value closer to the conventional significance threshold, it remained above α = 0.05. Consequently, the results suggest that social media usage group membership alone does not explain meaningful differences in campus participation or average sleep duration within either the international or domestic stratum. These findings indicate that while social media usage is associated with perceived impacts on sleep and mental health, it does not necessarily correspond to measurable differences in broader lifestyle indicators across the two strata.
+
+The multiple linear regression analysis provided additional insight into the factors associated with perceived mental health impact. Consistent with the simple linear regression results, social media usage remained the primary explanatory variable within both strata. For the international stratum, the interaction between social media usage and positive content encounter frequency was statistically significant, suggesting that the relationship between social media usage and perceived mental health impact may vary depending on the type of content encountered. In contrast, this interaction was not statistically significant within the domestic stratum. Average sleep hours did not exhibit a statistically significant effect in either stratum. These findings indicate that while social media usage is the dominant predictor of perceived mental health impact, the influence of positive content may differ across strata and warrants further investigation. Although the underlying reasons for this difference are beyond the scope of the present study, the results suggest that the relationship between social media usage and mental health may be influenced by the type of content encountered, particularly within the international stratum.
+
+The ANOVA analyses did not reveal statistically significant differences in perceived mental health impact across varying levels of positive content exposure. Similarly, social media usage did not explain a statistically significant proportion of variation in campus engagement within either student group. As a result, the evidence was insufficient to reject the null hypotheses associated with Research Questions 2 and 3. These findings suggest that factors beyond social media usage and positive content exposure may play a more substantial role in shaping campus involvement and perceived mental health outcomes.
+
+## Section 5: Limitations of the Study
+
+**Limitations of our Study**
+
+One limitation of this study is the absence of open-ended qualitative responses. While the survey successfully captured quantitative measures of social media usage and perceived well-being outcomes, qualitative responses could have provided additional context regarding how students interpret the effects of social media on their daily lives. Such information may have offered deeper insight into the mechanisms through which social media influences mental health, sleep patterns, and campus engagement.
+
+A second limitation concerns the measurement of campus engagement and sleep-related outcomes. The study relied on a limited number of survey variables to represent these complex behaviours, and social media usage is unlikely to be the sole factor influencing either outcome. Additional variables such as academic workload, employment commitments, extracurricular involvement, and personal circumstances may also contribute meaningfully to student well-being. Future studies incorporating a broader range of explanatory variables may provide a more comprehensive understanding of these relationships.
+
+## Section 6: Conclusion
+
+**Conclusion**
+
+This study investigated the impacts of social media on the university students' mental well-being, characterized by sleep patterns, engagement in campus events and overall influence on mental health. Our findings after conducting all of the critical tests showcases that social media usage has a statistically significant impact on the mental well-being of students, both in terms of their sleep quality and their perception of its impact on their mental health. However, social media's effect on campus engagement was not statistically significant, indicating that students’ participation in campus events appears largely unaffected by their social media habits. Furthermore, our analysis has revealed that positive content exposure did not demonstrate a statistically significant relationship with perceived mental health impact within this sample. This suggests that additional explanatory variables not included in the present study may also contribute meaningfully to student well-being outcomes. Therefore, we fail to reject the null hypothesis for research questions 2 and 3, respectively, while we can confidently reject the null hypothesis for the first research question.
+
+Future research should expand the range of explanatory variables considered when examining student well-being and social media usage. Incorporating larger samples, qualitative responses, and longitudinal data collection may provide a more comprehensive understanding of how social media influences mental health, sleep patterns, and campus engagement over time. Such improvements would strengthen the ability to identify underlying mechanisms and produce findings that are more broadly generalizable.
+
+In conclusion, while this study provides valuable insight into the relationship between social media usage and student well-being, it also highlights the importance of continued research to better understand the complex factors that contribute to students' mental health, sleep patterns, and campus engagement.
+
+## Section 7: Appendix
+
+### Reference
+
+1. Bhandarkar, P. (2021). *Social Media and Mental Health: Implications for Young Adults.*
+
+\newpage
+
+### R Code
+
+```{r}
+# R Code for Social Media Behaviour Analytics & Well-Being
+
+# International Students
+str(international_data) 
+summary(international_data)
+
+# Domestic Students
+str(domestic_data)
+summary(domestic_data)
+
+# --- Simple Linear Regression ---
+# Examine the relationship between Social Media Usage and Impact on Mental Health for both strata
+
+# International Students - Simple Linear Regression
+simple_lm_international <- lm(international_data$Impact.on.Mental.Health ~ international_data$Social.Media.Usage)
+summary(simple_lm_international)
+
+# Domestic Students - Simple Linear Regression
+simple_lm_domestic <- lm(domestic_data$Impact.on.Mental.Health ~ domestic_data$Social.Media.Usage)
+summary(simple_lm_domestic)
+
+# --- Comparison of Means Test ---
+# Compare mean Campus Engagement for students having greater than 4 hours on social media versus those with less (strata-wise)
+
+# Filter the data for students using social media more than 4 hours and 4 hours or less
+more_than_4 <- subset(data, data$Social.Media.Usage > 4)
+four_or_less <- subset(data, data$Social.Media.Usage <= 4)
+
+# Separating by strata within each usage group
+international_more_than_4 <- subset(more_than_4, more_than_4$Student.Status == "I")
+international_four_or_less <- subset(four_or_less, four_or_less$Student.Status == "I")
+
+domestic_more_than_4 <- subset(more_than_4, more_than_4$Student.Status == "D")
+domestic_four_or_less <- subset(four_or_less, four_or_less$Student.Status == "D")
+
+# Perform t-test for Campus Engagement Influence (International Students)
+t_test_intl <- t.test(international_more_than_4$Campus.Engagement.Influence, international_four_or_less$Campus.Engagement.Influence)
+print("International Students T-test Results")
+print(t_test_intl)
+
+# Perform t-test for Campus Engagement Influence (Domestic Students)
+t_test_dom <- t.test(domestic_more_than_4$Campus.Engagement.Influence, domestic_four_or_less$Campus.Engagement.Influence)
+print("Domestic Students T-test Results")
+print(t_test_dom)
+
+
+# --- Multiple Linear Regression ---
+# Examining the influence of Social Media Usage, Positive Content, and Average Sleep Hours on Impact on Mental Health Using Interactions
+
+# International Students - Multiple Linear Regression
+multiple_lm_international <- lm(international_data$Impact.on.Mental.Health ~ international_data$Social.Media.Usage + 
+                         international_data$Average.Sleep.Hours + 
+                         international_data$Social.Media.Usage * international_data$Positive.Content.Encounter.Frequency)
+summary(multiple_lm_international)
+
+# Domestic Students - Multiple Linear Regression
+multiple_lm_domestic <- lm(domestic_data$Impact.on.Mental.Health ~ domestic_data$Social.Media.Usage + 
+                        domestic_data$Average.Sleep.Hours + 
+                         domestic_data$Social.Media.Usage * domestic_data$Positive.Content.Encounter.Frequency)
+summary(multiple_lm_domestic)
+
+# --- ANOVA Test ---
+# Investigating the influence of Social Media Usage on Campus Engagement and Mental Health Events for each strata
+
+# International Students - Campus Engagement Influence
+anova_international_campus <- aov(international_data$Campus.Engagement.Influence ~ international_data$Social.Media.Usage)
+summary(anova_international_campus)
+
+# Domestic Students - Campus Engagement Influence
+anova_domestic_campus <- aov(domestic_data$Campus.Engagement.Influence ~ domestic_data$Social.Media.Usage)
+summary(anova_domestic_campus)
+
+# International Students - Impact on Mental Health
+anova_international_mental <- aov(international_data$Impact.on.Mental.Health ~ international_data$Social.Media.Usage)
+summary(anova_international_mental)
+
+# Domestic Students - Impact on Mental Health
+anova_domestic_mental <- aov(domestic_data$Impact.on.Mental.Health ~ domestic_data$Social.Media.Usage)
+summary(anova_domestic_mental)
+
+```

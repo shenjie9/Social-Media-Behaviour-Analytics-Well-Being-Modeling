@@ -1,0 +1,90 @@
+Social Media Behaviour Analytics & Well-Being Study Survey Questionnaire
+
+Student Status
+Multiple Choice
+Domestic Student
+International Student
+
+
+How would you rate your average daily social media usage?
+Multiple Choice
+1 - Very Low Usage
+2 - Low Usage
+3 - Moderate Usage
+4 - High Usage
+5 - Very High Usage
+
+
+To what extent do you believe social media affects your sleep quality or sleep schedule?
+Multiple Choice
+1 - No Impact
+2 - Slight Impact
+3 - Moderate Impact
+4 - Significant Impact
+5 - Strong Impact
+
+
+On average, how many hours of sleep do you get per night?
+Numeric
+
+
+To what extent do you believe social media affects your mental well-being?
+Multiple Choice
+1 - No Impact
+2 - Slight Impact
+3 - Moderate Impact
+4 - Significant Impact
+5 - Strong Impact
+
+
+To what extent does social media influence your participation in campus activities and events?
+Multiple Choice
+1 - No Influence
+2 - Slight Influence
+3 - Moderate Influence
+4 - Significant Influence
+5 - Strong Influence
+
+
+How frequently do you participate in mental health awareness or wellness events on campus?
+Multiple Choice
+1 - Never
+2 - Rarely
+3 - Occasionally
+4 - Frequently
+5 - Very Frequently
+
+
+How frequently do you encounter positive or uplifting content on social media?
+Multiple Choice
+1 - Very Rarely
+2 - Rarely
+3 - Sometimes
+4 - Frequently
+5 - Very Frequently
+
+
+How frequently do you encounter negative, stressful, or upsetting content on social media?
+Multiple Choice
+1 - Very Rarely
+2 - Rarely
+3 - Sometimes
+4 - Frequently
+5 - Very Frequently
+
+
+To what extent has content on social media influenced your self-esteem or body image?
+Multiple Choice
+1 - No Impact
+2 - Slight Impact
+3 - Moderate Impact
+4 - Significant Impact
+5 - Strong Impact
+
+
+What aspect of social media do you believe has the greatest impact on your well-being?
+Text
+
+
+Do you believe social media has had an overall positive or negative impact on your university experience?
+Text

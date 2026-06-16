@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# RStudio
+.Rhistory
+.RData
+.Ruserdata
+
+# Temporary files
+*.tmp
+
+# Logs
+*.log
